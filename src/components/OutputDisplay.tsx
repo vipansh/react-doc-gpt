@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
-
 interface OutputDisplayProps {
   output: string;
 }
+
 type CodeProps = {
   node?: any;
   inline?: boolean;
@@ -48,10 +48,10 @@ const OutputDisplay: React.FC<OutputDisplayProps> = ({ output }) => {
       }
 
       return (
-        <div className="relative bg-gray-800 p-1 rounded-md ">
+        <div className="relative bg-gray-800 p-1 rounded-md text-sm md:text-base">
           <div className="bg-gray-300 flex justify-end items-center p-1 rounded-t-md">
             <button
-              className="text-sm py-1 px-3"
+              className="text-xs py-1 px-3"
               onClick={() => handleCopy(children as string)}
             >
               {isCopied ? "Copied!" : "Copy"}
@@ -71,7 +71,9 @@ const OutputDisplay: React.FC<OutputDisplayProps> = ({ output }) => {
 
   return (
     <div className="p-4 my-4 bg-white shadow-md border border-gray-200 rounded-lg whitespace-pre-wrap">
-      <ReactMarkdown components={components}>{output}</ReactMarkdown>
+      <ReactMarkdown components={components} className="text-base md:text-lg">
+        {output}
+      </ReactMarkdown>
     </div>
   );
 };
