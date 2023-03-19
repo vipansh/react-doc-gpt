@@ -96,10 +96,10 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-gray-900 min-h-screen py-8 ">
+      <div className="bg-gray-900 min-h-screen max-h-max p-8 ">
         <div className="max-w-5xl mx-auto">
           <div className="w-full h-48">
-            <h1 className="text-transparent bg-gradient-to-l from-purple-700 via-pink-500 to-red-500 bg-clip-text font-extrabold text-6xl">
+            <h1 className="text-transparent bg-gradient-to-l from-purple-700 via-pink-500 to-red-500 bg-clip-text font-extrabold text-2xl md:text-6xl">
               Welcome to React doc GPT
             </h1>
             <div className="mt-8 space-y-4">
