@@ -1,5 +1,5 @@
 import { PGChunk, PGMainData } from "../../../types";
-import { supabaseClient } from "../../../utils/supabase";
+import { supabaseClient } from "../../utils/supabase";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
