@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
 import { supabaseClient } from "../../utils/supabase";
+
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -42,7 +43,7 @@ async function performSimilaritySearch(
     {
       query_embedding: embedding,
       similarity_threshold: 0.78, // Choose an appropriate threshold for your data
-      match_count: 10, // Choose the number of matches
+      match_count: 4, // Choose the number of matches
     }
   );
   if (error) {
@@ -52,10 +53,7 @@ async function performSimilaritySearch(
   return documents;
 }
 
-export default async function callGpt(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!process.env.OPENAI_API_KEY) {
     return res.status(500).json({ error: "Api key missing" });
   }
@@ -92,9 +90,11 @@ export default async function callGpt(
     });
     const result = response?.data?.choices?.[0]?.message?.content?.trim();
     console.log({ response: response?.data?.usage });
-    return res.json({ result });
+    new Response(result);
   } catch (error) {
     console.error(`Failed to save data:`, error);
-    res.status(500).json({ error });
+    new Error("error");
   }
-}
+};
+
+export default handler;

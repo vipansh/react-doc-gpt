@@ -1,13 +1,12 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import axios, { AxiosResponse } from "axios";
-import { supabaseClient } from "../utils/supabase";
 import { useState } from "react";
 import SearchIcon from "<components>/svg/SearchIcon";
 import AlertIcon from "<components>/svg/AlertIcon";
 import OutputDisplay from "<components>/components/OutputDisplay";
 import ProductHunt from "<components>/components/ProductHunt";
+
 const inter = Inter({ subsets: ["latin"] });
 
 interface GptRequest {
@@ -17,7 +16,7 @@ interface GptRequest {
 export async function callGptApi(
   request: GptRequest
 ): Promise<AxiosResponse<any>> {
-  const url = "/api/call-gpt";
+  const url = "/api/request-data-from-gpt";
   try {
     const response = await axios.post<any>(url, {
       query: request.query,
@@ -53,7 +52,7 @@ const Home = () => {
       const data = await callGptApi({
         query: query,
       });
-      setOutput(data.data.result);
+      setOutput(data.data);
       setIsLoading(false);
       setError("");
     } catch (e) {
@@ -112,19 +111,14 @@ const Home = () => {
                 </div>
               )}
             </div>
-            {isLoading ? (
+            {isLoading && (
               <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="flex items-center  flex-col justify-center space-y-6">
                   <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
-                  <div className="text-white text-center">
-                    Search react doc for the answer and sending react doc to gpt
-                    to get well format result{" "}
-                  </div>
                 </div>
               </div>
-            ) : (
-              <>{output && <OutputDisplay output={output} />}</>
             )}
+            <>{output && <OutputDisplay output={output} />}</>
             <div className="text-white">
               Search react doc for the answer and sending react doc to gpt to
               get well format result
