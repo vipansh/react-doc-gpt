@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
 import { supabaseClient } from "../../utils/supabase";
@@ -6,23 +5,34 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const openai = new OpenAIApi(configuration);
+export const openai = new OpenAIApi(configuration);
 
-const generateEmbeddings = async (
-  text: string,
-  url: string
-): Promise<number[]> => {
-  const response = await axios.post(`${url}/api/generateEmbeddings`, {
-    text,
-  });
-  return response.data.result;
-};
+async function generateEmbeddings(text: string) {
+  try {
+    const response = await openai.createEmbedding({
+      model: "text-embedding-ada-002",
+      input: text,
+    });
+
+    if (
+      response.data.data[0].embedding &&
+      response.data.data[0].embedding.length > 0
+    ) {
+      return response.data.data[0].embedding;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(`Failed to save data:`, error);
+    return [];
+  }
+}
 
 async function performSimilaritySearch(
   word: string,
   url: string
 ): Promise<any[]> {
-  const embedding = await generateEmbeddings(word, url);
+  const embedding = await generateEmbeddings(word);
   const { data: documents, error } = await supabaseClient.rpc(
     "react_match_documents",
     {
@@ -31,7 +41,10 @@ async function performSimilaritySearch(
       match_count: 10, // Choose the number of matches
     }
   );
-  console.log({ documents, error });
+  if (error) {
+    console.error(error);
+    return [];
+  }
   return documents;
 }
 
@@ -40,7 +53,7 @@ export default async function callGpt(
   res: NextApiResponse
 ) {
   if (!process.env.OPENAI_API_KEY) {
-    throw Error("Api key missing");
+    return res.status(500).json({ error: "Api key missing" });
   }
   const { query } = req.body;
 
