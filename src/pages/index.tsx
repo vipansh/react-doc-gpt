@@ -37,6 +37,7 @@ const Home = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
     if (isLoading) {
       setError("One request at a time");
       return;
@@ -73,7 +74,6 @@ const Home = () => {
       <div className="bg-gray-900 py-8 min-h-screen flex flex-col ">
         <div className="container max-w-5xl mx-auto flex flex-col flex-grow">
           {output && <ProductHunt />}
-          <ProductHunt />
           <div className="w-full h-48">
             <h1 className="px-4 text-transparent bg-gradient-to-l from-purple-700 via-pink-500 to-red-500 bg-clip-text font-extrabold text-2xl md:text-6xl">
               Welcome to React doc GPT
