@@ -115,14 +115,14 @@ const Home = () => {
               <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="flex items-center  flex-col justify-center space-y-6">
                   <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
+                  <div className="text-white text-center">
+                    Search react doc for the answer and sending react doc to gpt
+                    to get well format result{" "}
+                  </div>
                 </div>
               </div>
             )}
             <>{output && <OutputDisplay output={output} />}</>
-            <div className="text-white">
-              Search react doc for the answer and sending react doc to gpt to
-              get well format result
-            </div>
           </div>
         </div>
       </div>
