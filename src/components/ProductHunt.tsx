@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-type Props = {};
-
 const ProductHunt = () => {
   return (
     <div className="flex justify-end px-8 mb-2">

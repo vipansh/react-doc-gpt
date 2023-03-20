@@ -5,7 +5,7 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const openai = new OpenAIApi(configuration);
+const openai = new OpenAIApi(configuration);
 
 async function generateEmbeddings(text: string) {
   try {
@@ -27,6 +27,10 @@ async function generateEmbeddings(text: string) {
     return [];
   }
 }
+
+export const config = {
+  runtime: "edge",
+};
 
 async function performSimilaritySearch(
   word: string,
