@@ -73,6 +73,7 @@ const Home = () => {
       <div className="bg-gray-900 py-8 min-h-screen flex flex-col ">
         <div className="container max-w-5xl mx-auto flex flex-col flex-grow">
           {output && <ProductHunt />}
+          <ProductHunt />
           <div className="w-full h-48">
             <h1 className="px-4 text-transparent bg-gradient-to-l from-purple-700 via-pink-500 to-red-500 bg-clip-text font-extrabold text-2xl md:text-6xl">
               Welcome to React doc GPT
@@ -116,8 +117,8 @@ const Home = () => {
                 <div className="flex items-center  flex-col justify-center space-y-6">
                   <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
                   <div className="text-white text-center">
-                    Search react doc for the answer and sending react doc to gpt
-                    to get well format result{" "}
+                    Searching react doc for the answer and sending react doc to
+                    gpt to get well format result. This can take 10-15 sec.
                   </div>
                 </div>
               </div>
