@@ -10,27 +10,6 @@ import OutputDisplay from "<components>/components/OutputDisplay";
 import ProductHunt from "<components>/components/ProductHunt";
 const inter = Inter({ subsets: ["latin"] });
 
-const generateEmbeddings = async (text: string): Promise<number[]> => {
-  const response = await axios.post("/api/generateEmbeddings", {
-    text,
-  });
-  return response.data.result;
-};
-
-async function performSimilaritySearch(word: string): Promise<any[]> {
-  const embedding = await generateEmbeddings(word);
-  const { data: documents, error } = await supabaseClient.rpc(
-    "react_match_documents",
-    {
-      query_embedding: embedding,
-      similarity_threshold: 0.78, // Choose an appropriate threshold for your data
-      match_count: 10, // Choose the number of matches
-    }
-  );
-  console.log({ documents, error });
-  return documents;
-}
-
 interface GptRequest {
   query: string;
 }
@@ -40,17 +19,8 @@ export async function callGptApi(
 ): Promise<AxiosResponse<any>> {
   const url = "/api/call-gpt";
   try {
-    const searchResults = await performSimilaritySearch(request.query);
-
-    const contextText = searchResults
-      .map((searchResult) => {
-        return `${searchResult.content}`;
-      })
-      .join("");
-    console.log({ contextText });
     const response = await axios.post<any>(url, {
       query: request.query,
-      contextText,
     });
     console.log({ response });
     return response;
