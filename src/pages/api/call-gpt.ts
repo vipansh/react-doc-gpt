@@ -7,7 +7,7 @@ const configuration = new Configuration({
 
 export const openai = new OpenAIApi(configuration);
 
-// Create an in-memory cache using a Map
+
 
 export default async function callGpt(
   req: NextApiRequest,
@@ -38,12 +38,8 @@ export default async function callGpt(
       messages: [{ role: "user", content: prompt }],
     });
 
-    // Extract the required data from the response
+ 
     const result = response?.data?.choices?.[0]?.message?.content?.trim();
-
-    // Cache the response for future use
-
-    // Return the extracted data as a JSON object
     return res.json({ result });
   } catch (error) {
     console.error(`Failed to save data:`, error);
