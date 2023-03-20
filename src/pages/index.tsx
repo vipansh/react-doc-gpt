@@ -7,6 +7,7 @@ import { useState } from "react";
 import SearchIcon from "<components>/svg/SearchIcon";
 import AlertIcon from "<components>/svg/AlertIcon";
 import OutputDisplay from "<components>/components/OutputDisplay";
+import ProductHunt from "<components>/components/ProductHunt";
 const inter = Inter({ subsets: ["latin"] });
 
 const generateEmbeddings = async (text: string): Promise<number[]> => {
@@ -67,6 +68,10 @@ const Home = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (isLoading) {
+      setError("One request at a time");
+      return;
+    }
 
     if (query.trim() === "") {
       setError("Please enter a valid query.");
@@ -96,8 +101,9 @@ const Home = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-gray-900 min-h-screen max-h-max py-8 ">
-        <div className="max-w-5xl mx-auto">
+      <div className="bg-gray-900 py-8 ">
+        {output && <ProductHunt />}
+        <div className="max-w-5xl mx-auto min-h-screen">
           <div className="w-full h-48">
             <h1 className="px-4 text-transparent bg-gradient-to-l from-purple-700 via-pink-500 to-red-500 bg-clip-text font-extrabold text-2xl md:text-6xl">
               Welcome to React doc GPT
@@ -136,12 +142,19 @@ const Home = () => {
                 </div>
               )}
             </div>
-            {isLoading && (
+            {isLoading ? (
               <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
+                <div className="flex items-center  flex-col justify-center space-y-6">
+                  <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
+                  <div className="text-white text-center">
+                    Search react doc for the answer and sending react doc to gpt
+                    to get well format result{" "}
+                  </div>
+                </div>
               </div>
+            ) : (
+              <>{output && <OutputDisplay output={output} />}</>
             )}
-            {output && <OutputDisplay output={output} />}
           </div>
         </div>
       </div>

@@ -7,8 +7,6 @@ const configuration = new Configuration({
 
 export const openai = new OpenAIApi(configuration);
 
-
-
 export default async function callGpt(
   req: NextApiRequest,
   res: NextApiResponse
@@ -37,9 +35,8 @@ export default async function callGpt(
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
     });
-
- 
     const result = response?.data?.choices?.[0]?.message?.content?.trim();
+    console.log({ response: response?.data?.usage });
     return res.json({ result });
   } catch (error) {
     console.error(`Failed to save data:`, error);
