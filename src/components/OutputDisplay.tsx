@@ -69,6 +69,8 @@ const OutputDisplay: React.FC<OutputDisplayProps> = ({ output }) => {
     },
   };
 
+  if (!output) return null;
+
   return (
     <div className="p-4 my-4 bg-white shadow-md border border-gray-200 rounded-lg whitespace-pre-wrap">
       <ReactMarkdown components={components} className="text-base md:text-lg">

@@ -13,22 +13,6 @@ interface GptRequest {
   query: string;
 }
 
-export async function callGptApi(
-  request: GptRequest
-): Promise<AxiosResponse<any>> {
-  const url = "/api/request-data-from-gpt";
-  try {
-    const response = await axios.post<any>(url, {
-      query: request.query,
-    });
-    console.log({ response });
-    return response;
-  } catch (error) {
-    console.log({ error });
-    throw new Error(`Failed to call GPT API: `);
-  }
-}
-
 const Home = () => {
   const [query, setQuery] = useState("");
   const [output, setOutput] = useState("");
@@ -37,30 +21,48 @@ const Home = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     if (isLoading) {
       setError("One request at a time");
       return;
     }
 
-    if (query.trim() === "") {
-      setError("Please enter a valid query.");
+    setOutput("");
+    setIsLoading(true);
+    const url = "/api/request-data-from-gpt";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: query,
+      }),
+    });
+    console.log("Edge function returned.");
+
+    if (!response.ok) {
+      console.log(response);
+      setError("Something went wrong. plese try again");
+    }
+
+    // This data is a ReadableStream
+    const data = response.body;
+    if (!data) {
       return;
     }
 
-    try {
-      setIsLoading(true);
-      const data = await callGptApi({
-        query: query,
-      });
-      setOutput(data.data);
-      setIsLoading(false);
-      setError("");
-    } catch (e) {
-      console.log(e);
-      setError("An error occurred. Please try again later.");
-      setIsLoading(false);
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      setOutput((prev) => prev + chunkValue);
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -113,17 +115,19 @@ const Home = () => {
               )}
             </div>
             {isLoading && (
-              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="flex items-center  flex-col justify-center space-y-6">
-                  <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
-                  <div className="text-white text-center">
-                    Searching react doc for the answer and sending react doc to
-                    gpt to get well format result. This can take 10-15 sec.
+              <>
+                <div className="text-white text-center">
+                  Searching react doc for the answer and sending react doc to
+                  gpt to get well format result. This can take 10-15 sec.
+                </div>
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <div className="flex items-center  flex-col justify-center space-y-6">
+                    <div className="w-8 h-8 animate-spin border-t-2 border-white rounded-full" />
                   </div>
                 </div>
-              </div>
+              </>
             )}
-            <>{output && <OutputDisplay output={output} />}</>
+            <OutputDisplay output={output} />
           </div>
         </div>
       </div>
